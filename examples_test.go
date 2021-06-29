@@ -25,7 +25,7 @@ func ExampleMU() {
 	}
 	//
 	mu := &jsmu.MU{
-		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the defualt.
+		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the default.
 		// StructTag  : "",   // "jsmu" is the default.
 	}
 	mu.MustRegister(&Person{})
@@ -165,7 +165,7 @@ func ExampleMU_messageFactory() {
 	}
 	//
 	mu := &jsmu.MU{
-		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the defualt.
+		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the default.
 		// StructTag  : "",   // "jsmu" is the default.
 	}
 	// Pass the NewPerson constructor during registration.

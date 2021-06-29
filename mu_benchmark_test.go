@@ -35,7 +35,7 @@ func BenchmarkMU(b *testing.B) {
 	}
 	//
 	mu := &jsmu.MU{
-		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the defualt.
+		// EnveloperFn: nil,  // jsmu.DefaultEnveloperFunc is the default.
 		// StructTag  : "",   // "jsmu" is the default.
 	}
 	mu.MustRegister(&Person{})
