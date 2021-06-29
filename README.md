@@ -77,3 +77,25 @@ If you want to use a different JSON structure you can implement the `jsmu.Envelo
     1. A new envelope is created with `MU.EnveloperFn`.
     2. `value` is placed in the envelope.
     3. The newly created envelope is marshalled.
+
+
+## Performance  
+`jsmu.MU` has not yet been optimized.  However the extra overhead is not much slower than handling 2-pass JSON directly in your application (at least for the simple test I put together):
+```
+goos: windows
+goarch: amd64
+pkg: github.com/nofeaturesonlybugs/jsmu        
+cpu: Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz  
+BenchmarkMU/2-pass_unmarshal_limit_5-8             52425             23602 ns/op            7488 B/op        140 allocs/op
+BenchmarkMU/jsmu_unmarshal_limit_5-8               50223             24460 ns/op            7008 B/op        130 allocs/op
+BenchmarkMU/2-pass_unmarshal_limit_100-8            2731            466576 ns/op          147256 B/op       2800 allocs/op
+BenchmarkMU/jsmu_unmarshal_limit_100-8              2668            476442 ns/op          137656 B/op       2600 allocs/op
+BenchmarkMU/2-pass_unmarshal_limit_250-8             994           1171133 ns/op          367593 B/op       7000 allocs/op
+BenchmarkMU/jsmu_unmarshal_limit_250-8              1014           1194731 ns/op          343593 B/op       6500 allocs/op
+BenchmarkMU/2-pass_unmarshal_limit_500-8             519           2343670 ns/op          734043 B/op      14000 allocs/op
+BenchmarkMU/jsmu_unmarshal_limit_500-8               513           2394790 ns/op          686043 B/op      13000 allocs/op
+BenchmarkMU/2-pass_unmarshal_limit_1000-8            255           4734993 ns/op         1467949 B/op      28000 allocs/op
+BenchmarkMU/jsmu_unmarshal_limit_1000-8              244           4788199 ns/op         1371949 B/op      26000 allocs/op
+PASS
+ok      github.com/nofeaturesonlybugs/jsmu      14.532s
+```

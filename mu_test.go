@@ -183,6 +183,58 @@ func TestMU_Unmarshal_MarshallerReturnsErrors(t *testing.T) {
 	}
 }
 
+func TestMU_Unmarshal_Slice_MarshallerReturnsErrors(t *testing.T) {
+	chk := assert.New(t)
+	//
+	type Person struct {
+		jsmu.TypeName `jsmu:"person"`
+		Name          string `json:"name"`
+		Age           int    `json:"age"`
+	}
+	js := `{
+		"type" : "people",
+		"message" : [{
+			"name" : "Bob",
+			"age" : 40
+		}, {
+			"name" : "Bob",
+			"age" : 40
+		}]
+	}`
+	//
+	mock := &jsmu.MockMarshaller{}
+	//
+	mu := jsmu.MU{
+		Marshaller: mock,
+	}
+	mu.MustRegister([]*Person{}, jsmu.TypeName("people"))
+	//
+	{
+		// First call to Unmarshal errors
+		mock.UnmarshalImplementation = func(data []byte, v interface{}) error {
+			return errors.Errorf("first unmarshal error")
+		}
+		_, err := mu.Unmarshal([]byte(js))
+		chk.Error(err)
+		chk.Contains(err.Error(), "first unmarshal error")
+	}
+	//
+	{
+		// Second call to Unmarshal errors
+		calls := -1
+		mock.UnmarshalImplementation = func(data []byte, v interface{}) error {
+			calls++
+			if calls == 0 {
+				return jsmu.DefaultMarshaller.Unmarshal(data, v)
+			}
+			return errors.Errorf("second unmarshal error")
+		}
+		_, err := mu.Unmarshal([]byte(js))
+		chk.Error(err)
+		chk.Contains(err.Error(), "second unmarshal error")
+	}
+}
+
 func TestMU_Marshal_MarshallerReturnsErrors(t *testing.T) {
 	chk := assert.New(t)
 	//
