@@ -1,5 +1,7 @@
 /develop
 
+    + Bug fix.  Unmarshal no longer recycles struct instances.  Add relevant test.
+
 0.1.0
     + MU marshals|unmarshals data.
     + Enveloper interface for allowing custom JSON envelopes.

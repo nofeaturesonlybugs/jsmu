@@ -88,10 +88,12 @@ func (me *MU) Register(value interface{}, opts ...interface{}) error {
 	//
 	typ := reflect.TypeOf(value)
 	if factoryFn == nil {
-		t := typ
-		v := reflect.New(t)
-		set.Writable(v)
 		factoryFn = func() (interface{}, error) {
+			// Save and shadow outer t.
+			t := typ
+			// Create a new instance and make writable; i.e. instantiate if t is a pointer.
+			v := reflect.New(t)
+			set.Writable(v)
 			// When creating a slice we need to hang onto that initial pointer.
 			if t.Kind() == reflect.Slice {
 				rv := &wrappedPtr{
