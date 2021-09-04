@@ -35,6 +35,39 @@ func TestMU_MustRegister_DoubleRegisterPanics(t *testing.T) {
 	chk.Contains(str, "already registered")
 }
 
+func TestMU_Unmarshal_NoObjectRecycling(t *testing.T) {
+	chk := assert.New(t)
+	//
+	type Person struct {
+		jsmu.TypeName `jsmu:"person"`
+		Name          string `json:"name"`
+		Age           int    `json:"age"`
+	}
+	{
+		jsA := `{
+			"type" : "person",
+			"message" : {
+				"name" : "Bob",
+				"age" : 40
+			}
+		}`
+		jsB := `{
+			"type" : "person",
+			"message" : {
+				"name" : "Sally",
+				"age" : 30
+			}
+		}`
+		mu := jsmu.MU{}
+		mu.MustRegister(&Person{})
+		a, err := mu.Unmarshal([]byte(jsA))
+		chk.NoError(err)
+		b, err := mu.Unmarshal([]byte(jsB))
+		chk.NoError(err)
+		chk.NotEqual(a.GetMessage(), b.GetMessage())
+	}
+}
+
 func TestMU_Register_NoTypeNameIsError(t *testing.T) {
 	chk := assert.New(t)
 	//
