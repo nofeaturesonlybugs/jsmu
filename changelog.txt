@@ -1,5 +1,6 @@
 /develop
 
+0.1.1
     + Bug fix.  Unmarshal no longer recycles struct instances.  Add relevant test.
 
 0.1.0
